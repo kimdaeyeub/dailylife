@@ -6,15 +6,12 @@ import Home from "./routes/Home";
 import Detail from "./routes/Detail";
 import ProtectedUser from "./components/permission/ProtectedUser";
 import UserExist from "./routes/UserExist";
+import CreateAccount from "./routes/CreateAccount";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <ProtectedRouter>
-        <Layout />
-      </ProtectedRouter>
-    ),
+    element: <Layout />,
     children: [
       {
         path: "",
@@ -22,21 +19,33 @@ const router = createBrowserRouter([
       },
       {
         path: ":id",
-        element: <Detail />,
+        element: (
+          <ProtectedRouter>
+            <Detail />
+          </ProtectedRouter>
+        ),
+      },
+      {
+        path: "login",
+        element: (
+          <ProtectedUser>
+            <Login />
+          </ProtectedUser>
+        ),
+      },
+      {
+        path: "sign-up",
+        element: (
+          <ProtectedUser>
+            <CreateAccount />
+          </ProtectedUser>
+        ),
+      },
+      {
+        path: "user/error",
+        element: <UserExist />,
       },
     ],
-  },
-  {
-    path: "/login",
-    element: (
-      <ProtectedUser>
-        <Login />
-      </ProtectedUser>
-    ),
-  },
-  {
-    path: "user/error",
-    element: <UserExist />,
   },
 ]);
 
