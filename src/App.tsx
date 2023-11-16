@@ -14,7 +14,7 @@ const App = () => {
     init();
   }, []);
   return (
-    <div className="w-full min-h-screen bg-[#EFF1F6]">
+    <div>
       {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
     </div>
   );
