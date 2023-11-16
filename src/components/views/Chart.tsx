@@ -27,15 +27,15 @@ const Chart = () => {
         xaxis: {
           labels: {
             style: {
-              colors: [
-                "#FFFFFF",
-                "#FFFFFF",
-                "#FFFFFF",
-                "#FFFFFF",
-                "#FFFFFF",
-                "#FFFFFF",
-                "#FFFFFF",
-              ],
+              // colors: [
+              //   "#FFFFFF",
+              //   "#FFFFFF",
+              //   "#FFFFFF",
+              //   "#FFFFFF",
+              //   "#FFFFFF",
+              //   "#FFFFFF",
+              //   "#FFFFFF",
+              // ],
             },
           },
         },

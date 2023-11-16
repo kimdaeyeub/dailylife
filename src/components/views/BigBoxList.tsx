@@ -1,13 +1,12 @@
+import React from "react";
+
 interface IProp {
   title: string;
 }
-const Goal = ({ title }: IProp) => {
+const BigBoxList = ({ title }: IProp) => {
   return (
-    <div className="flex justify-between items-center h-10">
-      <div className="flex space-x-4 items-center">
-        <div className="w-4 h-4 rounded-full bg-[#e84393]" />
-        <span className="text-gray-800">{title}</span>
-      </div>
+    <div className="w-full py-2 px-4 flex justify-between items-center border-l-4 border-red-500">
+      <span className="">{title}</span>
       <svg
         className="text-gray-500 cursor-pointer"
         width={20}
@@ -26,4 +25,4 @@ const Goal = ({ title }: IProp) => {
   );
 };
 
-export default Goal;
+export default BigBoxList;

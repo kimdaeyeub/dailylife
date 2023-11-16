@@ -5,7 +5,7 @@ const BoxOne = () => {
     <div className="w-full h-full">
       <div className="flex justify-between items-center">
         <div className="flex flex-col justify-center items-start">
-          <h1 className="font-semibold text-3xl text-white">이번 주</h1>
+          <h1 className="font-semibold text-3xl">이번 주</h1>
           <h1 className="font-semibold text-xl text-gray-400">81.5점</h1>
         </div>
         <div className="flex items-center space-x-1">

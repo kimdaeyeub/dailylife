@@ -3,7 +3,7 @@ import Navbar from "./views/Navbar";
 
 const Layout = () => {
   return (
-    <div className="min-h-screen bg-[#1F2330]">
+    <div className="min-h-screen bg-[#EFF1F6]">
       <Navbar />
       <Outlet />
     </div>
