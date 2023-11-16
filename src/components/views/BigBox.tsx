@@ -1,25 +1,90 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import BigBoxList from "./BigBoxList";
+import { useRecoilValue } from "recoil";
+import { goalState } from "../../atom";
+import AddDetailModal from "./AddDetailModal";
+import { auth, db } from "../../firebase";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
+
+export interface IList {
+  title: string;
+  createdAt: string;
+  count: number;
+  id: string;
+}
 
 const BigBox = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [list, setList] = useState<IList[]>([]);
+  const toggleModal = () => {
+    setOpenModal(!openModal);
+  };
+  const goal = useRecoilValue(goalState);
+  const user = auth.currentUser;
+  const fetchList = async () => {
+    const goalQuery = query(
+      collection(db, "user", user!.uid, goal.id),
+      orderBy("createdAt", "desc")
+    );
+    const snapshot = await getDocs(goalQuery);
+    const lists = snapshot.docs.map((doc) => {
+      const { title, createdAt, count } = doc.data();
+      return {
+        id: doc.id,
+        createdAt,
+        title,
+        count,
+      };
+    });
+    setList(lists);
+  };
+  useEffect(() => {
+    fetchList();
+  }, [goal]);
   return (
-    <div className="flex flex-col justify-center items-center w-full">
-      <div className="flex justify-between items-center mb-8 w-full">
-        <h1 className="text-3xl font-semibold">오늘</h1>
-        <select className="outline-none bg-slate-300 text-gray-800 px-2 py-1 rounded-md">
-          <option>오늘</option>
-          <option>코딩</option>
-          <option>운동</option>
-          <option>독서</option>
-        </select>
+    <>
+      {openModal ? (
+        <>
+          <div
+            onClick={toggleModal}
+            className="cursor-pointer fixed top-0 left-0 w-screen h-full bg-black bg-opacity-40"
+          ></div>
+          <AddDetailModal toggleModal={toggleModal} />
+        </>
+      ) : null}
+      <div className="flex flex-col justify-center items-center w-full">
+        <div className="flex justify-between items-center mb-4 w-full">
+          <h1 className="text-3xl font-semibold">{goal.title}</h1>
+          <button
+            onClick={toggleModal}
+            className="bg-black bg-opacity-10 p-2 rounded-md"
+          >
+            <svg
+              color="white"
+              width={25}
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                clipRule="evenodd"
+                fillRule="evenodd"
+                d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
+              ></path>
+            </svg>
+          </button>
+        </div>
+        <p className="mb-6 text-gray-500 text-start w-full">
+          {goal.description}
+        </p>
+        <div className="flex flex-col space-y-4 w-full">
+          {list.map((item) => (
+            <BigBoxList key={item.id} {...item} />
+          ))}
+        </div>
       </div>
-      <div className="flex flex-col space-y-4 w-full">
-        <BigBoxList title="코딩 1시간" />
-        <BigBoxList title="코딩 2시간" />
-        <BigBoxList title="코딩 3시간" />
-        <BigBoxList title="코딩 4시간" />
-      </div>
-    </div>
+    </>
   );
 };
 

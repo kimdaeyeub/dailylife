@@ -1,9 +1,7 @@
 import React from "react";
+import { IList } from "./BigBox";
 
-interface IProp {
-  title: string;
-}
-const BigBoxList = ({ title }: IProp) => {
+const BigBoxList = ({ title, count, id, createdAt }: IList) => {
   return (
     <div className="w-full py-2 px-4 flex justify-between items-center border-l-4 border-red-500">
       <span className="">{title}</span>

@@ -1,9 +1,23 @@
-interface IProp {
-  title: string;
-}
-const Goal = ({ title }: IProp) => {
+import { useRecoilState } from "recoil";
+import { IGoal } from "./BoxTwo";
+import { goalState } from "../../atom";
+
+const Goal = ({ title, id, createdAt, userId, description }: IGoal) => {
+  const [value, setValue] = useRecoilState<IGoal>(goalState);
+  const onClick = () => {
+    setValue({
+      title,
+      id,
+      createdAt,
+      userId,
+      description,
+    });
+  };
   return (
-    <div className="flex justify-between items-center h-10">
+    <div
+      onClick={onClick}
+      className="flex justify-between items-center h-10 cursor-pointer"
+    >
       <div className="flex space-x-4 items-center">
         <div className="w-4 h-4 rounded-full bg-[#e84393]" />
         <span className="text-gray-800">{title}</span>

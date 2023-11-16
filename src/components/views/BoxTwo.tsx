@@ -1,12 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Goal from "./Goal";
 import Modal from "./Modal";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { auth, db } from "../../firebase";
+import { useRecoilState } from "recoil";
+import { goalState } from "../../atom";
+
+export interface IGoal {
+  title: string;
+  description: string;
+  createdAt: number;
+  userId: string;
+  id: string;
+}
 
 const BoxTwo = () => {
+  const [goal, setGoal] = useRecoilState(goalState);
   const [openModal, setOpenModal] = useState(false);
+  const [goals, setGoals] = useState<IGoal[]>([]);
+  const user = auth.currentUser;
   const toggleModal = () => {
     setOpenModal(!openModal);
   };
+  const fetchGoals = async () => {
+    if (user === null) return;
+    const goalsQuery = query(
+      collection(db, "goals"),
+      where("userId", "==", user?.uid),
+      orderBy("createdAt", "desc")
+    );
+    const snapshot = await getDocs(goalsQuery);
+    const goals = snapshot.docs.map((doc) => {
+      const { title, createdAt, userId, description } = doc.data();
+      return {
+        id: doc.id,
+        createdAt,
+        userId,
+        title,
+        description,
+      };
+    });
+    setGoals(goals);
+    setGoal(goals[0]);
+  };
+  useEffect(() => {
+    fetchGoals();
+  }, []);
   return (
     <>
       {openModal ? (
@@ -15,7 +54,7 @@ const BoxTwo = () => {
             onClick={toggleModal}
             className="cursor-pointer fixed top-0 left-0 w-screen h-full bg-black bg-opacity-40"
           ></div>
-          <Modal />
+          <Modal toggleModal={toggleModal} />
         </>
       ) : null}
       <div className="flex flex-col">
@@ -41,9 +80,9 @@ const BoxTwo = () => {
             </svg>
           </button>
         </div>
-        <Goal title="코딩" />
-        <Goal title="운동" />
-        <Goal title="독서" />
+        {goals.map((goal) => (
+          <Goal key={goal.id} {...goal} />
+        ))}
       </div>
     </>
   );
