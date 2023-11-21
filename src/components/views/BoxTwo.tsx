@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import Goal from "./Goal";
 import Modal from "./Modal";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
-import { auth, db } from "../../firebase";
-import { useRecoilState } from "recoil";
-import { goalState } from "../../atom";
+import { auth } from "../../firebase";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { goalState, goalsState } from "../../atom";
+import { getGoals } from "../../api";
 
 export interface IGoal {
   title: string;
@@ -15,36 +15,16 @@ export interface IGoal {
 }
 
 const BoxTwo = () => {
-  const [goal, setGoal] = useRecoilState(goalState);
   const [openModal, setOpenModal] = useState(false);
-  const [goals, setGoals] = useState<IGoal[]>([]);
   const user = auth.currentUser;
   const toggleModal = () => {
     setOpenModal(!openModal);
   };
-  const fetchGoals = async () => {
-    if (user === null) return;
-    const goalsQuery = query(
-      collection(db, "goals"),
-      where("userId", "==", user?.uid),
-      orderBy("createdAt", "desc")
-    );
-    const snapshot = await getDocs(goalsQuery);
-    const goals = snapshot.docs.map((doc) => {
-      const { title, createdAt, userId, description } = doc.data();
-      return {
-        id: doc.id,
-        createdAt,
-        userId,
-        title,
-        description,
-      };
-    });
-    setGoals(goals);
-    setGoal(goals[0]);
-  };
+  const goals = useRecoilValue(goalsState);
   useEffect(() => {
-    fetchGoals();
+    if (user) {
+      getGoals();
+    }
   }, []);
   return (
     <>

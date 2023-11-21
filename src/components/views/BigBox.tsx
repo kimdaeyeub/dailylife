@@ -19,28 +19,6 @@ const BigBox = () => {
   const toggleModal = () => {
     setOpenModal(!openModal);
   };
-  const goal = useRecoilValue(goalState);
-  const user = auth.currentUser;
-  const fetchList = async () => {
-    const goalQuery = query(
-      collection(db, "user", user!.uid, goal.id),
-      orderBy("createdAt", "desc")
-    );
-    const snapshot = await getDocs(goalQuery);
-    const lists = snapshot.docs.map((doc) => {
-      const { title, createdAt, count } = doc.data();
-      return {
-        id: doc.id,
-        createdAt,
-        title,
-        count,
-      };
-    });
-    setList(lists);
-  };
-  useEffect(() => {
-    fetchList();
-  }, [goal]);
   return (
     <>
       {openModal ? (
@@ -54,7 +32,7 @@ const BigBox = () => {
       ) : null}
       <div className="flex flex-col justify-center items-center w-full">
         <div className="flex justify-between items-center mb-4 w-full">
-          <h1 className="text-3xl font-semibold">{goal.title}</h1>
+          <h1 className="text-3xl font-semibold">title</h1>
           <button
             onClick={toggleModal}
             className="bg-black bg-opacity-10 p-2 rounded-md"
@@ -75,9 +53,7 @@ const BigBox = () => {
             </svg>
           </button>
         </div>
-        <p className="mb-6 text-gray-500 text-start w-full">
-          {goal.description}
-        </p>
+        <p className="mb-6 text-gray-500 text-start w-full">asdasdasdasd</p>
         <div className="flex flex-col space-y-4 w-full">
           {list.map((item) => (
             <BigBoxList key={item.id} {...item} />

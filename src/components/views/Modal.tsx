@@ -1,6 +1,9 @@
 import { addDoc, collection } from "firebase/firestore";
 import React, { useState } from "react";
 import { auth, db } from "../../firebase";
+import { getGoals } from "../../api";
+import { useSetRecoilState } from "recoil";
+import { refetch } from "../../atom";
 
 interface IProp {
   toggleModal: () => void;
@@ -9,6 +12,7 @@ interface IProp {
 const Modal = ({ toggleModal }: IProp) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const refetchState = useSetRecoilState(refetch);
   const onChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
   };
@@ -29,6 +33,7 @@ const Modal = ({ toggleModal }: IProp) => {
     } catch (error) {
       console.log(error);
     } finally {
+      refetchState(true);
       setTitle("");
       setDescription("");
       toggleModal();

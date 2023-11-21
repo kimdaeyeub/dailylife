@@ -2,39 +2,38 @@ import { useRecoilValue } from "recoil";
 import Chart from "./Chart";
 import { auth, db } from "../../firebase";
 import { goalState } from "../../atom";
-import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { IList } from "./BigBox";
 
 const BoxOne = () => {
-  const [count, setCount] = useState(0);
-  const goal = useRecoilValue(goalState);
-  const user = auth.currentUser;
-  const fetchList = async () => {
-    const date = new Date();
-    const createdAt = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
-    const goalQuery = query(
-      collection(db, "user", user!.uid, goal.id),
-      where("createdAt", "==", createdAt)
-    );
-    const snapshot = await getDocs(goalQuery);
-    const lists = snapshot.docs.map((doc) => {
-      const { title, createdAt, count } = doc.data();
-      return {
-        id: doc.id,
-        createdAt,
-        title,
-        count,
-      };
-    });
-    // lists.map((item) => console.log(item.count));
-    const num = lists.map((item) => item.count);
-    setCount(num.reduce((a, b) => a + b));
-    console.log(count);
-  };
-  useEffect(() => {
-    fetchList();
-  }, [goal]);
+  // const [count, setCount] = useState(0);
+  // const goal = useRecoilValue(goalState);
+  // const user = auth.currentUser;
+  // const fetchList = async () => {
+  //   const date = new Date();
+  //   const createdAt = `${date.getFullYear()}/${date.getMonth()}/${date.getDate()}`;
+  //   const goalQuery = query(
+  //     collection(db, "user", user!.uid, goal.id),
+  //     where("createdAt", "==", createdAt)
+  //   );
+  //   const snapshot = await getDocs(goalQuery);
+  //   const lists = snapshot.docs.map((doc) => {
+  //     const { title, createdAt, count } = doc.data();
+  //     return {
+  //       id: doc.id,
+  //       createdAt,
+  //       title,
+  //       count,
+  //     };
+  //   });
+  //   // lists.map((item) => console.log(item.count));
+  //   const num = lists.map((item) => item.count);
+  //   setCount(num.reduce((a, b) => a + b));
+  //   console.log(count);
+  // };
+  // useEffect(() => {
+  //   fetchList();
+  // }, [goal]);
   return (
     <div className="w-full h-full">
       <div className="flex justify-between items-center">
